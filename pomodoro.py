@@ -9,6 +9,9 @@ def play_alarm():
         print("SFX not found, please add an alarm.mp3 file.")
     except Exception:
         print("Alarm couldn't be played.")
+    except KeyboardInterrupt:
+        print("Timer stopped by user")
+        return
 
 
 def timer(hrs, mins, secs, label):
