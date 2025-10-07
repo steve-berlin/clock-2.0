@@ -3,6 +3,9 @@ import subprocess
 from wakepy import keep
 
 with keep.running():
+    title = input("Title: ")
+    caption = input("Caption: ")
+    sfx = input("Sound effect: ")
     hrs = input("Hours: ")
     mins = input("Minutes: ")
     secs = input("Seconds: ")
@@ -20,16 +23,33 @@ with keep.running():
         sleep(1)
         total_secs -= 1
     print("Time's up!")
-    subprocess.call(["notify-send", "Time's up!"])
-    while True:
-        try:
-            subprocess.call(["mpv", "--loop", "alarm.mp3"])
-        except FileNotFoundError:
-            print(
-                "SFX not found, please add an alarm.mp3 file in the same directory as this script."
-            )
-            break
-        except KeyboardInterrupt:
-            print("Timer stopped by user.")
-            break
-        # SFX not found
+    if title is None and caption is None:
+        subprocess.call(["notify-send", "Time's up!"])
+    else:
+        subprocess.call(["notify-send", title, caption])
+    if sfx is None:
+        while True:
+            try:
+                subprocess.call(["mpv", "--loop", "alarm.mp3"])
+            except FileNotFoundError:
+                print(
+                    "SFX not found, please add an alarm.mp3 file in the same directory as this script."
+                )
+                break
+            except KeyboardInterrupt:
+                print("Timer stopped by user.")
+                break
+            # SFX not found
+    else:
+        while True:
+            try:
+                subprocess.call(["mpv", "--loop", sfx])
+            except FileNotFoundError:
+                print(
+                    "SFX not found, please add a SFX file in the same directory as this script or use the built-in alarm.mp3 file."
+                )
+                break
+            except KeyboardInterrupt:
+                print("Timer stopped by user.")
+                break
+            # SFX not found
