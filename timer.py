@@ -20,7 +20,7 @@ with keep.running():
     # Play sound effect with fallback
     sound_to_play = sfx if sfx else "start.mp3"
 
-    retcode = subprocess.call(["mpv", sound_to_play])
+    retcode = subprocess.call(["mpv", "--no-terminal", sound_to_play])
     if retcode != 0:
         print(f"Failed to play {sound_to_play}, trying default start.mp3")
         subprocess.call(["mpv", "--loop", "start.mp3"])
@@ -43,9 +43,9 @@ with keep.running():
     sound_to_play = sfx if sfx else "alarm.mp3"
 
     try:
-        retcode = subprocess.call(["mpv", "--loop", sound_to_play])
+        retcode = subprocess.call(["mpv", "--no-terminal", "--loop", sound_to_play])
         if retcode != 0:
             print(f"Failed to play {sound_to_play}, trying default alarm.mp3")
-            subprocess.call(["mpv", "--loop", "alarm.mp3"])
+            subprocess.call(["mpv", "--loop", "--no-terminal", "alarm.mp3"])
     except KeyboardInterrupt:
         print("Timer stopped by user.")
