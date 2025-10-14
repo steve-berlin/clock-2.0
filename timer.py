@@ -9,47 +9,43 @@ with keep.running():
     hrs = input("Hours: ")
     mins = input("Minutes: ")
     secs = input("Seconds: ")
-    # if mins
-    # Timer
-    # Convert to seconds
+    if hrs == "":
+        hrs = 0
+    if mins == "":
+        mins = 0
+    if secs == "":
+        secs = 0
+
     total_secs = int(hrs) * 3600 + int(mins) * 60 + int(secs)
+    # Play sound effect with fallback
+    sound_to_play = sfx if sfx else "start.mp3"
+
+    retcode = subprocess.call(["mpv", sound_to_play])
+    if retcode != 0:
+        print(f"Failed to play {sound_to_play}, trying default start.mp3")
+        subprocess.call(["mpv", "--loop", "start.mp3"])
+
     while total_secs > 0:
-        # Calculate hours, minutes, seconds
         hrs = total_secs // 3600
         mins = (total_secs % 3600) // 60
         secs = total_secs % 60
-        # Display the timer
         print(f"{hrs:02}:{mins:02}:{secs:02}", end="\r")
         sleep(1)
         total_secs -= 1
+
     print("Time's up!")
-    if title is None and caption is None:
+    if not title and not caption:
         subprocess.call(["notify-send", "Time's up!"])
     else:
         subprocess.call(["notify-send", title, caption])
-    if sfx is None:
-        while True:
-            try:
-                subprocess.call(["mpv", "--loop", "alarm.mp3"])
-            except FileNotFoundError:
-                print(
-                    "SFX not found, please add an alarm.mp3 file in the same directory as this script."
-                )
-                break
-            except KeyboardInterrupt:
-                print("Timer stopped by user.")
-                break
-            # SFX not found
-    else:
-        while True:
-            try:
-                subprocess.call(["mpv", "--loop", sfx])
-            except FileNotFoundError:
-                print(
-                    "SFX not found, please add a SFX file in the same directory as this script or use the built-in alarm.mp3 file."
-                )
-                break
-            except KeyboardInterrupt:
-                print("Timer stopped by user.")
-                break
-            # SFX not found
+
+    # Play sound effect with fallback
+    sound_to_play = sfx if sfx else "alarm.mp3"
+
+    try:
+        retcode = subprocess.call(["mpv", "--loop", sound_to_play])
+        if retcode != 0:
+            print(f"Failed to play {sound_to_play}, trying default alarm.mp3")
+            subprocess.call(["mpv", "--loop", "alarm.mp3"])
+    except KeyboardInterrupt:
+        print("Timer stopped by user.")
