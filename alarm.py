@@ -7,11 +7,6 @@ from pydub.playback import play
 msg1 = input("Header text: ")
 msg2 = input("Caption text: ")
 
-sfx = input("Choose sound effect (1-5): ")
-
-if int(sfx) > 5 or int(sfx) < 1:
-    sfx = input("Invalid sound effect, please choose another: ")
-
 
 def get_time_input(prompt, max_value):
     while True:
@@ -37,7 +32,7 @@ while True:
 
 # Play the alarm sound once
 system(f'notify-send "{msg1}" "{msg2}"')
-song = AudioSegment.from_mp3(f"src/sfx/{sfx}.mp3")
+song = AudioSegment.from_mp3("alarm.mp3")
 while True:
     play(song)
     print("Alarm finished!")
